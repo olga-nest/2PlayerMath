@@ -14,9 +14,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *playerOneCurrentScoreView;
 @property (weak, nonatomic) IBOutlet UILabel *playerTwoCurrentScoreView;
 @property (weak, nonatomic) IBOutlet UILabel *questionLabelView;
-@property (nonatomic) NSMutableString *inputString;
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel;
+
 @property (nonatomic, assign) int result;
+@property (nonatomic) NSMutableString *inputString;
+@property (nonatomic) NSMutableString *scoreAndLives;
 
 @property (nonatomic) GameModel *gameModel;
 @property (nonatomic) Player *player;
@@ -27,14 +29,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    Player *player = [Player new];
+    self.player = [Player new];
     self.gameModel = [GameModel new];
     self.inputString = [NSMutableString new];
-  //  self.resultLabel.text = @"Wrong!";
+    self.scoreAndLives = [NSMutableString new];
     
     // Do any additional setup after loading the view, typically from a nib.
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -62,11 +63,21 @@
     if (self.result == self.gameModel.answer) {
         self.resultLabel.text = @"Correct!";
         self.inputString = @"";
+        
+        self.scoreAndLives = [NSMutableString stringWithFormat:@"Player 1. Score: N. Lives left %d", self.player.numberOfLifes];
+        self.playerOneCurrentScoreView.text = self.scoreAndLives;
+        
         self.questionLabelView.text = [self.gameModel askAdditionQuestion];
+        
+        
     } else {
         [self.player looseLife];
         self.resultLabel.text = @"Wrong!";
         self.inputString = @"";
+        
+        self.scoreAndLives = [NSMutableString stringWithFormat:@"Player 1. Score: N. Lives left %d", self.player.numberOfLifes];
+        self.playerOneCurrentScoreView.text = self.scoreAndLives;
+        
         if (self.player.numberOfLifes > 0) {
             self.questionLabelView.text = [self.gameModel askAdditionQuestion]; }
         else if (self.player.numberOfLifes == 0) {
